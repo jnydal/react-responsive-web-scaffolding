@@ -1,4 +1,5 @@
-import { createBrowserRouter, RouteObject } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
+import type { RouteObject } from 'react-router-dom';
 import { authRoutes } from '../features/auth/routes';
 
 const routes: RouteObject[] = [

@@ -1,13 +1,5 @@
+import type { LoginRequest, LoginResponse } from '../../features/auth/types/auth.types';
 import { baseApi } from './base-api';
-
-export interface LoginRequest {
-  username: string;
-  password: string;
-}
-
-export interface LoginResponse {
-  [key: string]: unknown;
-}
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -15,7 +7,11 @@ export const authApi = baseApi.injectEndpoints({
       query: (credentials) => ({
         url: '/user/login',
         method: 'POST',
-        body: credentials,
+        // Backend currently expects username/email; map the local identifier
+        body: {
+          username: credentials.identifier,
+          password: credentials.password,
+        },
       }),
     }),
   }),

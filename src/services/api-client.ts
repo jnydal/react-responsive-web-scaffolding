@@ -1,9 +1,15 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://api.sukker.no';
 
-export interface ApiError {
+export class ApiError extends Error {
   status: number;
   data?: unknown;
-  message?: string;
+
+  constructor(status: number, data?: unknown, message?: string) {
+    super(message || `Request failed with status ${status}`);
+    this.status = status;
+    this.data = data;
+    Object.setPrototypeOf(this, ApiError.prototype);
+  }
 }
 
 export async function apiClient<T>(
@@ -32,13 +38,11 @@ export async function apiClient<T>(
         errorData = {};
       }
 
-      const error: ApiError = {
-        status: response.status,
-        data: errorData,
-        message: `Request failed with status ${response.status}`,
-      };
-
-      throw error;
+      throw new ApiError(
+        response.status,
+        errorData,
+        `Request failed with status ${response.status}`
+      );
     }
 
     // Handle empty responses
@@ -49,15 +53,12 @@ export async function apiClient<T>(
 
     return {} as T;
   } catch (error) {
-    if (error && typeof error === 'object' && 'status' in error) {
+    if (error instanceof ApiError) {
       throw error;
     }
 
     // Network or other errors
-    throw {
-      status: 0,
-      message: 'Network error or request failed',
-    } as ApiError;
+    throw new ApiError(0, undefined, 'Network error or request failed');
   }
 }
 

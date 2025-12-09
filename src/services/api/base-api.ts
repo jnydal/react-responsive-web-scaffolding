@@ -1,4 +1,5 @@
-import { createApi, BaseQueryFn } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import type { BaseQueryFn } from '@reduxjs/toolkit/query';
 import { apiClient, ApiError } from '../api-client';
 
 interface BaseQueryArgs {
@@ -17,11 +18,20 @@ const baseQuery: BaseQueryFn<BaseQueryArgs, unknown, ApiError> = async (args) =>
     });
     return { data: result };
   } catch (error) {
-    const apiError = error as ApiError;
+    if (error instanceof ApiError) {
+      return {
+        error: {
+          status: error.status,
+          data: error.data,
+        },
+      };
+    }
+
+    // Fallback for unknown errors
     return {
       error: {
-        status: apiError.status,
-        data: apiError.data,
+        status: 500,
+        data: { message: 'Unknown error' },
       },
     };
   }

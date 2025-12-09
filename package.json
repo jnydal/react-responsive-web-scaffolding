@@ -12,7 +12,8 @@
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
     "@reduxjs/toolkit": "^2.2.7",
-    "flowbite-react": "^0.50.0",
+    "flowbite": "^4.0.1",
+    "flowbite-react": "^0.12.10",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.53.0",

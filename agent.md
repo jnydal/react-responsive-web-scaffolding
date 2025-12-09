@@ -139,7 +139,6 @@ Never guess API shapes. Always read from the OpenAPI spec unless the user explic
 
 ---
 
-
 ## Agent Behaviour Rules
 
 When generating or editing code:
@@ -151,4 +150,14 @@ When generating or editing code:
 5. Favor **clarity over cleverness**; keep branching shallow and use early returns.
 6. Add comments only to explain **why**, not **what**.
 7. When you are unsure between multiple valid options, **prefer consistency** with existing code and these docs.
+8. When importing TypeScript-only types from any library (including `@reduxjs/toolkit` and `@reduxjs/toolkit/query`), you must always use `import type`. Type-only exports must never be imported as runtime values.
+  - Example:
+  ```ts
+  import { createSlice } from '@reduxjs/toolkit';
+  import type { PayloadAction } from '@reduxjs/toolkit';
+
+  import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+  import type { BaseQueryFn } from '@reduxjs/toolkit/query';
+  ```
+  
 

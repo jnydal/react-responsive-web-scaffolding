@@ -2,19 +2,18 @@ import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
-import { Button, Label, TextInput } from 'flowbite-react';
+import { Alert, Button, Card, Label, TextInput } from 'flowbite-react';
 import { useLoginMutation } from '../../../services/api/auth-api';
 import { useAppDispatch } from '../../../app/hooks';
 import { setUser } from '../redux/auth-slice';
 import { loginSchema, type LoginFormData } from '../types/login-schema';
-import { ApiError } from '../../../services/api-client';
+import type { LoginResponse } from '../types/auth.types';
 
 export function LoginPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const dispatch = useAppDispatch();
   const [login, { isLoading }] = useLoginMutation();
-  const identifierInputRef = useRef<HTMLInputElement>(null);
   const errorAlertRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -30,8 +29,8 @@ export function LoginPage() {
 
   // Focus identifier field on mount
   useEffect(() => {
-    identifierInputRef.current?.focus();
-  }, []);
+    setFocus('identifier');
+  }, [setFocus]);
 
   // Focus first error field on validation error
   useEffect(() => {
@@ -45,64 +44,56 @@ export function LoginPage() {
   const onSubmit = async (data: LoginFormData) => {
     try {
       const result = await login({
-        username: data.identifier,
+        identifier: data.identifier,
         password: data.password,
       }).unwrap();
 
       // Update auth state
-      if (result && typeof result === 'object' && 'user' in result) {
-        dispatch(setUser(result.user as { id?: string; [key: string]: unknown }));
-      } else {
-        // If no user in response, create a minimal user object
-        dispatch(setUser({ id: 'unknown' }));
-      }
+      const typedResult = result as LoginResponse;
+      const user = typedResult.user ?? { id: 'unknown', username: data.identifier };
+      dispatch(setUser(user));
 
       // Redirect to returnTo or default route
       const returnTo = searchParams.get('returnTo') || '/';
       navigate(returnTo, { replace: true });
     } catch (error) {
-      // RTK Query unwrap() throws errors in a specific format
-      const apiError = error as { status?: number; data?: unknown } | ApiError;
-      const status = 'status' in apiError ? apiError.status : 0;
+      const status =
+        error && typeof error === 'object' && 'status' in error
+          ? (error as { status?: number }).status ?? 0
+          : 0;
 
-      if (status === 401) {
-        // Incorrect credentials
-        setError('root', {
-          type: 'server',
-          message: 'E-post/brukernavn eller passord er feil. Vennligst prøv igjen.',
-        });
-        errorAlertRef.current?.focus();
-      } else {
-        // Server or network error
-        setError('root', {
-          type: 'server',
-          message: 'Noe gikk galt ved innlogging. Vennligst prøv igjen senere.',
-        });
-        errorAlertRef.current?.focus();
-      }
+      const message =
+        status === 401
+          ? 'E-post/brukernavn eller passord er feil. Vennligst prøv igjen.'
+          : 'Noe gikk galt ved innlogging. Vennligst prøv igjen senere.';
+
+      setError('root', {
+        type: 'server',
+        message,
+      });
+      errorAlertRef.current?.focus();
     }
   };
 
   return (
-    <div className="bg-white py-8 px-6 shadow rounded-lg sm:px-10">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Logg inn</h1>
+    <Card className="shadow-lg">
+      <h1 className="text-2xl font-bold text-gray-900">Logg inn</h1>
 
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        {/* General error message */}
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
         {errors.root && (
-          <div
+          <Alert
             ref={errorAlertRef}
-            role="alert"
-            className="mb-4 p-3 text-sm text-red-800 bg-red-50 rounded-lg border border-red-200"
+            color="failure"
             tabIndex={-1}
+            aria-live="assertive"
+            className="text-sm"
           >
             {errors.root.message}
-          </div>
+          </Alert>
         )}
 
-        {/* Identifier field */}
-        <div className="mb-4">
-          <Label htmlFor="identifier" className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="space-y-1">
+          <Label htmlFor="identifier" className="text-sm font-medium text-gray-700">
             E-post eller brukernavn
           </Label>
           <TextInput
@@ -110,20 +101,19 @@ export function LoginPage() {
             type="text"
             {...register('identifier')}
             color={errors.identifier ? 'failure' : 'gray'}
-            helperText={errors.identifier?.message}
             aria-describedby={errors.identifier ? 'identifier-error' : undefined}
             aria-invalid={!!errors.identifier}
+            required
           />
           {errors.identifier && (
-            <p id="identifier-error" className="mt-1 text-sm text-red-600">
+            <p id="identifier-error" className="text-sm text-red-600">
               {errors.identifier.message}
             </p>
           )}
         </div>
 
-        {/* Password field */}
-        <div className="mb-6">
-          <Label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="space-y-1">
+          <Label htmlFor="password" className="text-sm font-medium text-gray-700">
             Passord
           </Label>
           <TextInput
@@ -131,48 +121,35 @@ export function LoginPage() {
             type="password"
             {...register('password')}
             color={errors.password ? 'failure' : 'gray'}
-            helperText={errors.password?.message}
             aria-describedby={errors.password ? 'password-error' : undefined}
             aria-invalid={!!errors.password}
+            required
           />
           {errors.password && (
-            <p id="password-error" className="mt-1 text-sm text-red-600">
+            <p id="password-error" className="text-sm text-red-600">
               {errors.password.message}
             </p>
           )}
         </div>
 
-        {/* Submit button */}
-        <Button
-          type="submit"
-          disabled={isLoading}
-          className="w-full mb-4"
-          isProcessing={isLoading}
-        >
+        <Button type="submit" disabled={isLoading} className="w-full" isProcessing={isLoading}>
           {isLoading ? 'Logger inn...' : 'Logg inn'}
         </Button>
       </form>
 
-      {/* Links */}
-      <div className="mt-6 space-y-2 text-center text-sm">
+      <div className="space-y-2 text-center text-sm">
         <div>
-          <Link
-            to="/forgot-password"
-            className="text-blue-600 hover:text-blue-800 hover:underline"
-          >
+          <Link to="/forgot-password" className="text-blue-600 hover:text-blue-800 hover:underline">
             Glemt passord?
           </Link>
         </div>
         <div>
-          <Link
-            to="/register"
-            className="text-blue-600 hover:text-blue-800 hover:underline"
-          >
+          <Link to="/register" className="text-blue-600 hover:text-blue-800 hover:underline">
             Ny bruker? Opprett gratis profil
           </Link>
         </div>
       </div>
-    </div>
+    </Card>
   );
 }
 

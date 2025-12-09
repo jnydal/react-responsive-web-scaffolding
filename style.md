@@ -132,3 +132,14 @@ We rely on Flowbite’s built-in accessibility but must still ensure: :contentRe
   - Avoid testing implementation details.
 - Test slices and selectors in isolation for Redux logic.
 
+---
+
+## Standard for Backend Error UI
+
+- All backend-related errors that are shown to the user **must** be rendered using Flowbite React error components, such as:
+  - `<Alert color="failure" />`
+  - or equivalent Flowbite-provided error/alert components.
+- Custom error `<div>` elements styled only with Tailwind **must not** be used for backend errors.
+- Inline text errors are **only allowed** for field-level validation errors handled by React Hook Form + Zod.
+- RTK Query errors that reach the UI layer must always be mapped to a Flowbite Alert component.
+- Raw backend error messages must never be shown directly to users.

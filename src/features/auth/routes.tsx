@@ -1,4 +1,4 @@
-import { RouteObject } from 'react-router-dom';
+import type { RouteObject } from 'react-router-dom';
 import { AuthLayout } from '../../layouts/auth-layout';
 import { LoginPage } from './pages/login-page';
 
