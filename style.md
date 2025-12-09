@@ -3,10 +3,64 @@
 
 ## Design System
 
-We use:
+We use a **three-layer UI strategy**:
 
-- **Tailwind CSS** for utility-first styling.
-- **Flowbite React** components as base building blocks (buttons, modals, forms, navigation, etc.).   
+### 1. Flowbite Blocks (Primary – Layout & Sections)
+
+- **Flowbite Blocks are the default starting point for all new pages and major UI sections.**
+- Blocks define:
+  - Page layout
+  - Section structure
+  - Visual composition (heroes, navigation, dashboards, forms, pricing, footers, etc.)
+
+Rules:
+- ✅ Always start with a Flowbite Block if a suitable one exists
+- ✅ Use the block as the visual and structural reference
+- ✅ Convert the block into React (TSX) using Tailwind classes
+- ✅ Preserve Flowbite spacing, responsiveness, and layout principles unless there is a strong reason not to
+
+Flowbite Blocks define **what the UI looks like at a high level**.
+
+---
+
+### 2. Flowbite React Components (Secondary – UI Primitives & Interaction)
+
+We use **Flowbite React components as base building blocks for interactive UI elements**, such as:
+
+- Buttons
+- Modals & dialogs
+- Inputs & form controls
+- Tabs & accordions
+- Dropdowns & tooltips
+- Alerts & feedback components
+
+Flowbite React components are used when:
+- A block needs **dynamic behavior**
+- A section must be **reusable**
+- We need **state, validation, or interaction**
+
+Rules:
+- ✅ Use Flowbite React components inside blocks when interaction is required
+- ✅ Use Flowbite React components for reusable UI primitives
+- ❌ Do not rebuild standard UI elements manually if a Flowbite React component already exists
+
+Flowbite React defines **how the UI behaves at a low level**.
+
+---
+
+### 3. Tailwind CSS (Layout & Fine-Tuning Layer)
+
+We use **Tailwind CSS for utility-first styling and layout control**, including:
+
+- Spacing
+- Grid & Flexbox
+- Responsive behavior
+- Minor visual adjustments
+
+Rules:
+- ✅ Tailwind is used to adapt Flowbite Blocks to project needs
+- ✅ Tailwind is used alongside Flowbite React components
+- ❌ Tailwind must NOT be used to rebuild complex UI components that already exist in Flowbite
 
 ## Responsive Design
 
@@ -26,6 +80,18 @@ All new pages and components must be tested at common breakpoints:
 - Prefer Tailwind classes via `className`.
 - Do **not** use `style={{ ... }}` inline styles except for rare dynamic cases that cannot be expressed via Tailwind.
 - Global styles live in `src/styles/global.css` using Tailwind layers and a few custom classes. :contentReference[oaicite:20]{index=20}  
+
+## UI Decision Flow
+
+When building UI, always follow this order:
+
+1. **Does a Flowbite Block exist for this section?**
+   - Yes → Use it
+   - No → Compose using Flowbite React components
+
+2. **Does a Flowbite React component exist for this UI element?**
+   - Yes → Use it
+   - No → Implement with Tailwind + custom React
 
 ---
 

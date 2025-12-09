@@ -14,6 +14,7 @@
     "@reduxjs/toolkit": "^2.2.7",
     "flowbite": "^4.0.1",
     "flowbite-react": "^0.12.10",
+    "flowbite-react-blocks": "file:flowbite-react-blocks-1.8.0-beta",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.53.0",

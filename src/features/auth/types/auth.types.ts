@@ -1,8 +1,9 @@
 // Temporary types - to be updated when backend confirms shape
-export interface User {
+export interface AuthUser {
   id?: string;
   email?: string;
   username?: string;
+  displayName?: string;
   [key: string]: unknown;
 }
 
@@ -11,8 +12,12 @@ export interface LoginRequest {
   password: string;
 }
 
+export type LoginPayload =
+  | { username: string; password: string }
+  | { email: string; password: string };
+
 export interface LoginResponse {
-  user?: User;
+  user?: AuthUser;
   [key: string]: unknown;
 }
 

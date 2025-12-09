@@ -25,6 +25,7 @@ export function LoginPage() {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     mode: 'onSubmit',
+    reValidateMode: 'onSubmit',
   });
 
   // Focus identifier field on mount
@@ -76,77 +77,92 @@ export function LoginPage() {
   };
 
   return (
-    <Card className="shadow-lg">
-      <h1 className="text-2xl font-bold text-gray-900">Logg inn</h1>
+    <Card className="shadow-2xl border border-slate-100/70 bg-white/95 backdrop-blur">
+      <div className="space-y-6">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900">Logg inn</h1>
+        </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
-        {errors.root && (
-          <Alert
-            ref={errorAlertRef}
-            color="failure"
-            tabIndex={-1}
-            aria-live="assertive"
-            className="text-sm"
+        <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
+          {errors.root && (
+            <Alert
+              ref={errorAlertRef}
+              color="failure"
+              tabIndex={-1}
+              aria-live="assertive"
+              role="alert"
+              className="text-sm"
+            >
+              {errors.root.message}
+            </Alert>
+          )}
+
+          <div className="space-y-1.5">
+            <Label htmlFor="identifier" className="text-sm font-medium text-gray-700">
+              E-post eller brukernavn
+            </Label>
+            <TextInput
+              id="identifier"
+              type="text"
+              autoComplete="username"
+              {...register('identifier')}
+              color={errors.identifier ? 'failure' : 'gray'}
+              aria-describedby={errors.identifier ? 'identifier-error' : undefined}
+              aria-invalid={!!errors.identifier}
+              required
+            />
+            {errors.identifier && (
+              <p id="identifier-error" className="text-sm text-red-600">
+                {errors.identifier.message}
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+              Passord
+            </Label>
+            <TextInput
+              id="password"
+              type="password"
+              autoComplete="current-password"
+              {...register('password')}
+              color={errors.password ? 'failure' : 'gray'}
+              aria-describedby={errors.password ? 'password-error' : undefined}
+              aria-invalid={!!errors.password}
+              required
+            />
+            {errors.password && (
+              <p id="password-error" className="text-sm text-red-600">
+                {errors.password.message}
+              </p>
+            )}
+          </div>
+
+          <Button
+            type="submit"
+            disabled={isLoading}
+            isProcessing={isLoading}
+            className="w-full"
           >
-            {errors.root.message}
-          </Alert>
-        )}
+            {isLoading ? 'Logger inn...' : 'Logg inn'}
+          </Button>
+        </form>
 
-        <div className="space-y-1">
-          <Label htmlFor="identifier" className="text-sm font-medium text-gray-700">
-            E-post eller brukernavn
-          </Label>
-          <TextInput
-            id="identifier"
-            type="text"
-            {...register('identifier')}
-            color={errors.identifier ? 'failure' : 'gray'}
-            aria-describedby={errors.identifier ? 'identifier-error' : undefined}
-            aria-invalid={!!errors.identifier}
-            required
-          />
-          {errors.identifier && (
-            <p id="identifier-error" className="text-sm text-red-600">
-              {errors.identifier.message}
-            </p>
-          )}
-        </div>
-
-        <div className="space-y-1">
-          <Label htmlFor="password" className="text-sm font-medium text-gray-700">
-            Passord
-          </Label>
-          <TextInput
-            id="password"
-            type="password"
-            {...register('password')}
-            color={errors.password ? 'failure' : 'gray'}
-            aria-describedby={errors.password ? 'password-error' : undefined}
-            aria-invalid={!!errors.password}
-            required
-          />
-          {errors.password && (
-            <p id="password-error" className="text-sm text-red-600">
-              {errors.password.message}
-            </p>
-          )}
-        </div>
-
-        <Button type="submit" disabled={isLoading} className="w-full" isProcessing={isLoading}>
-          {isLoading ? 'Logger inn...' : 'Logg inn'}
-        </Button>
-      </form>
-
-      <div className="space-y-2 text-center text-sm">
-        <div>
-          <Link to="/forgot-password" className="text-blue-600 hover:text-blue-800 hover:underline">
-            Glemt passord?
-          </Link>
-        </div>
-        <div>
-          <Link to="/register" className="text-blue-600 hover:text-blue-800 hover:underline">
-            Ny bruker? Opprett gratis profil
-          </Link>
+        <div className="space-y-2 text-center text-sm text-gray-700">
+          <div>
+            <Link
+              to="/forgot-password"
+              className="text-blue-600 hover:text-blue-800 hover:underline"
+            >
+              Glemt passord?
+            </Link>
+          </div>
+          <div>
+            <Link to="/register" className="text-blue-600 hover:text-blue-800 hover:underline">
+              Ny bruker? Opprett gratis profil
+            </Link>
+          </div>
         </div>
       </div>
     </Card>

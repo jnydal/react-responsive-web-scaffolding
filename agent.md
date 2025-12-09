@@ -100,7 +100,7 @@ When you get a new sketch / wireframe / flow, follow this checklist:
 
 4. **Implement UI**
 
-   - Use Flowbite React components and Tailwind classes.
+   - Use Flowbite Blocks as default starting point, and fallback to Flowbite React components and Tailwind classes when neccesarry.
    - Container components:
      - Use RTK Query hooks and/or `useAppSelector` / `useAppDispatch`.
    - Presentational components:
