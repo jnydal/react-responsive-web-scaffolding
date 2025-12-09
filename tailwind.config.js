@@ -7,7 +7,7 @@ export default {
     './src/**/*.{js,ts,jsx,tsx}',
     './node_modules/flowbite/**/*.{js,ts,jsx,tsx}',
     './node_modules/flowbite-react/**/*.{js,ts,jsx,tsx}',
-    './node_modules/flowbite-react-blocks-1.8.0-beta/**/*.{js,ts,jsx,tsx}',
+    './node_modules/flowbite-react-blocks/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {},

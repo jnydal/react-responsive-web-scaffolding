@@ -77,94 +77,96 @@ export function LoginPage() {
   };
 
   return (
-    <section className="w-full">
-      <div className="mx-auto w-full max-w-md rounded-lg border border-slate-100/70 bg-white/95 p-6 shadow-xl backdrop-blur sm:p-8">
-        <div className="space-y-6">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900">Logg inn</h1>
-          </div>
-
-          <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
-            {errors.root && (
-              <Alert
-                ref={errorAlertRef}
-                color="failure"
-                tabIndex={-1}
-                aria-live="assertive"
-                role="alert"
-                className="text-sm"
-              >
-                {errors.root.message}
-              </Alert>
-            )}
-
-            <div className="space-y-1.5">
-              <Label htmlFor="identifier" className="text-sm font-medium text-gray-700">
-                E-post eller brukernavn
-              </Label>
-              <TextInput
-                id="identifier"
-                type="text"
-                autoComplete="username"
-                {...register('identifier')}
-                color={errors.identifier ? 'failure' : 'gray'}
-                aria-describedby={errors.identifier ? 'identifier-error' : undefined}
-                aria-invalid={!!errors.identifier}
-                required
-              />
-              {errors.identifier && (
-                <p id="identifier-error" className="text-sm text-red-600">
-                  {errors.identifier.message}
-                </p>
-              )}
+    <section className="flex min-h-screen items-center justify-center bg-gray-50 px-6 py-8">
+      <div className="w-full max-w-md">
+        <div className="rounded-lg border border-slate-100/80 bg-white/95 shadow-xl backdrop-blur sm:border-slate-200">
+          <div className="space-y-8 p-6 sm:p-8">
+            <div className="text-center">
+              <h1 className="text-2xl font-bold tracking-tight text-gray-900">Logg inn</h1>
             </div>
 
-            <div className="space-y-1.5">
-              <Label htmlFor="password" className="text-sm font-medium text-gray-700">
-                Passord
-              </Label>
-              <TextInput
-                id="password"
-                type="password"
-                autoComplete="current-password"
-                {...register('password')}
-                color={errors.password ? 'failure' : 'gray'}
-                aria-describedby={errors.password ? 'password-error' : undefined}
-                aria-invalid={!!errors.password}
-                required
-              />
-              {errors.password && (
-                <p id="password-error" className="text-sm text-red-600">
-                  {errors.password.message}
-                </p>
+            <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
+              {errors.root && (
+                <Alert
+                  ref={errorAlertRef}
+                  color="failure"
+                  tabIndex={-1}
+                  aria-live="assertive"
+                  role="alert"
+                  className="text-sm"
+                >
+                  {errors.root.message}
+                </Alert>
               )}
-            </div>
 
-            <Button type="submit" disabled={isLoading} className="w-full">
-              {isLoading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <Spinner size="sm" />
-                  Logger inn...
-                </span>
-              ) : (
-                'Logg inn'
-              )}
-            </Button>
-          </form>
+              <div className="space-y-1.5">
+                <Label htmlFor="identifier" className="text-sm font-medium text-gray-700">
+                  E-post eller brukernavn
+                </Label>
+                <TextInput
+                  id="identifier"
+                  type="text"
+                  autoComplete="username"
+                  {...register('identifier')}
+                  color={errors.identifier ? 'failure' : 'gray'}
+                  aria-describedby={errors.identifier ? 'identifier-error' : undefined}
+                  aria-invalid={!!errors.identifier}
+                  required
+                />
+                {errors.identifier && (
+                  <p id="identifier-error" className="text-sm text-red-600">
+                    {errors.identifier.message}
+                  </p>
+                )}
+              </div>
 
-          <div className="space-y-2 text-center text-sm text-gray-700">
-            <div>
-              <Link
-                to="/forgot-password"
-                className="text-blue-600 hover:text-blue-800 hover:underline"
-              >
-                Glemt passord?
-              </Link>
-            </div>
-            <div>
-              <Link to="/register" className="text-blue-600 hover:text-blue-800 hover:underline">
-                Ny bruker? Opprett gratis profil
-              </Link>
+              <div className="space-y-1.5">
+                <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                  Passord
+                </Label>
+                <TextInput
+                  id="password"
+                  type="password"
+                  autoComplete="current-password"
+                  {...register('password')}
+                  color={errors.password ? 'failure' : 'gray'}
+                  aria-describedby={errors.password ? 'password-error' : undefined}
+                  aria-invalid={!!errors.password}
+                  required
+                />
+                {errors.password && (
+                  <p id="password-error" className="text-sm text-red-600">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+
+              <Button type="submit" disabled={isLoading} className="w-full">
+                {isLoading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <Spinner size="sm" />
+                    Logger inn...
+                  </span>
+                ) : (
+                  'Logg inn'
+                )}
+              </Button>
+            </form>
+
+            <div className="space-y-2 text-center text-sm text-gray-700">
+              <div>
+                <Link
+                  to="/forgot-password"
+                  className="text-blue-600 hover:text-blue-800 hover:underline"
+                >
+                  Glemt passord?
+                </Link>
+              </div>
+              <div>
+                <Link to="/register" className="text-blue-600 hover:text-blue-800 hover:underline">
+                  Ny bruker? Opprett gratis profil
+                </Link>
+              </div>
             </div>
           </div>
         </div>
