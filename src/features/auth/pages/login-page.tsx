@@ -77,15 +77,13 @@ export function LoginPage() {
   };
 
   return (
-    <section className="flex min-h-screen items-center justify-center bg-gray-50 px-6 py-8">
+    <section className="login-page">
       <div className="w-full max-w-md">
-        <div className="rounded-lg border border-slate-100/80 bg-white/95 shadow-xl backdrop-blur sm:border-slate-200">
-          <div className="space-y-8 p-6 sm:p-8">
-            <div className="text-center">
-              <h1 className="text-2xl font-bold tracking-tight text-gray-900">Logg inn</h1>
-            </div>
+        <div className="login-card">
+          <div className="login-card-inner">
+            <h1 className="login-title">Logg inn</h1>
 
-            <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
+            <form onSubmit={handleSubmit(onSubmit)} noValidate className="login-form">
               {errors.root && (
                 <Alert
                   ref={errorAlertRef}
@@ -93,20 +91,21 @@ export function LoginPage() {
                   tabIndex={-1}
                   aria-live="assertive"
                   role="alert"
-                  className="text-sm"
+                  className="login-error"
                 >
                   {errors.root.message}
                 </Alert>
               )}
 
-              <div className="space-y-1.5">
-                <Label htmlFor="identifier" className="text-sm font-medium text-gray-700">
+              <div className="login-field">
+                <Label htmlFor="identifier" className="ui-label">
                   E-post eller brukernavn
                 </Label>
                 <TextInput
                   id="identifier"
                   type="text"
                   autoComplete="username"
+                  className="ui-input"
                   {...register('identifier')}
                   color={errors.identifier ? 'failure' : 'gray'}
                   aria-describedby={errors.identifier ? 'identifier-error' : undefined}
@@ -120,14 +119,15 @@ export function LoginPage() {
                 )}
               </div>
 
-              <div className="space-y-1.5">
-                <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+              <div className="login-field">
+                <Label htmlFor="password" className="ui-label">
                   Passord
                 </Label>
                 <TextInput
                   id="password"
                   type="password"
                   autoComplete="current-password"
+                  className="ui-input"
                   {...register('password')}
                   color={errors.password ? 'failure' : 'gray'}
                   aria-describedby={errors.password ? 'password-error' : undefined}
@@ -141,7 +141,7 @@ export function LoginPage() {
                 )}
               </div>
 
-              <Button type="submit" disabled={isLoading} className="w-full">
+              <Button type="submit" disabled={isLoading} className="ui-button">
                 {isLoading ? (
                   <span className="flex items-center justify-center gap-2">
                     <Spinner size="sm" />
@@ -153,17 +153,17 @@ export function LoginPage() {
               </Button>
             </form>
 
-            <div className="space-y-2 text-center text-sm text-gray-700">
+            <div className="login-links">
               <div>
                 <Link
                   to="/forgot-password"
-                  className="text-blue-600 hover:text-blue-800 hover:underline"
+                  className="login-link"
                 >
                   Glemt passord?
                 </Link>
               </div>
               <div>
-                <Link to="/register" className="text-blue-600 hover:text-blue-800 hover:underline">
+                <Link to="/register" className="login-link">
                   Ny bruker? Opprett gratis profil
                 </Link>
               </div>

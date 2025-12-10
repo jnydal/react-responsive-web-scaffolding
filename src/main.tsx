@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { RouterProvider } from 'react-router-dom';
 import { store } from './app/store';
 import { router } from './routes';
-import './styles/global.css';
+import './styles/global.css';      // your tailwind globals
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
