@@ -33,6 +33,15 @@ Always assume and use this stack:
 - **Styling**: Tailwind CSS + Flowbite React components
 - **Testing**: Jest, React Testing Library, Cypress   
 
+### Styling Strategy
+
+The styling stack is:
+
+- Tailwind CSS
+- Flowbite Blocks (for page/section layout)
+- Flowbite React components (for interactive primitives)
+- **Semantic component classes defined in `src/styles/global.css` using `@apply`**
+
 ---
 
 ## Backend / API

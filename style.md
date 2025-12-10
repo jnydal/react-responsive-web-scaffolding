@@ -62,6 +62,19 @@ Rules:
 - ✅ Tailwind is used alongside Flowbite React components
 - ❌ Tailwind must NOT be used to rebuild complex UI components that already exist in Flowbite
 
+---
+
+## Page Construction Rules
+
+All step-by-step rules for creating new pages, defining semantic classes,
+and applying Tailwind in TSX are defined in:
+
+`recipes.md` (Single source of truth for page construction)
+
+`style.md` defines the design system and constraints only.
+
+---
+
 ## Responsive Design
 
 The application must be fully responsive and mobile-first.  
@@ -79,7 +92,8 @@ All new pages and components must be tested at common breakpoints:
 
 - Prefer Tailwind classes via `className`.
 - Do **not** use `style={{ ... }}` inline styles except for rare dynamic cases that cannot be expressed via Tailwind.
-- Global styles live in `src/styles/global.css` using Tailwind layers and a few custom classes. :contentReference[oaicite:20]{index=20}  
+- Global styles live in `src/styles/global.css` using Tailwind layers and **semantic component classes** (via `@apply`), not ad-hoc per-component CSS files.
+:contentReference[oaicite:20]{index=20}  
 
 ## UI Decision Flow
 
@@ -209,3 +223,153 @@ We rely on Flowbite’s built-in accessibility but must still ensure: :contentRe
 - Inline text errors are **only allowed** for field-level validation errors handled by React Hook Form + Zod.
 - RTK Query errors that reach the UI layer must always be mapped to a Flowbite Alert component.
 - Raw backend error messages must never be shown directly to users.
+
+--
+
+## Recipe: Creating a New Page (CursorAI Checklist)
+
+When generating a new page (e.g. “Profile page”, “Settings page”), follow these steps exactly.
+
+### Step 1 – Choose a key
+
+- Example keys:
+  - `login`, `register`, `profile`, `settings`, `matches`, `messages`
+- Use this key consistently:
+  - CSS classes: `.profile-page`, `.profile-card`, `.profile-form`, …
+  - File names: `ProfilePage.tsx` or `profile-page.tsx` (follow existing convention).
+
+### Step 2 – Add semantic classes to `global.css`
+
+In `src/styles/global.css` under `@layer components`:
+
+```css
+@layer components {
+  /* Profile page layout */
+  .profile-page {
+    @apply flex min-h-screen bg-gray-50 px-6 py-8;
+  }
+
+  .profile-card {
+    @apply w-full max-w-4xl mx-auto rounded-lg border border-slate-100/80 bg-white/95 shadow-xl backdrop-blur;
+  }
+
+  .profile-card-inner {
+    @apply flex flex-col gap-6 p-6 sm:p-8;
+  }
+
+  .profile-header {
+    @apply flex items-center justify-between gap-4;
+  }
+
+  .profile-title {
+    @apply text-2xl font-bold tracking-tight text-gray-900;
+  }
+
+  .profile-content {
+    @apply grid gap-6 md:grid-cols-2;
+  }
+
+  .profile-section {
+    @apply flex flex-col gap-4;
+  }
+
+  .profile-field {
+    @apply flex flex-col gap-1.5;
+  }
+
+  .profile-footer {
+    @apply flex justify-end gap-3 pt-4 border-t border-slate-100;
+  }
+
+  /* Profile-specific overrides of global primitives */
+  .profile-page .ui-label {
+    @apply text-sm font-medium text-gray-800;
+  }
+
+  .profile-page .ui-input {
+    @apply shadow-sm focus:ring-2 focus:ring-blue-300 bg-white;
+  }
+
+  .profile-page .ui-button {
+    @apply px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 focus:ring-4 focus:ring-blue-300;
+  }
+}
+```
+
+Rules:
+
+- Use Tailwind only in @apply inside global.css.
+- Think in terms of:
+  - Page container (.profile-page)
+  - Card/layout shell (.profile-card, .profile-card-inner)
+  - Repeated patterns (fields, sections, footer)
+  - Scoped overrides of ui-* primitives.
+
+## Step 3 – Build the TSX page using semantic classes
+```
+export function ProfilePage() {
+  return (
+    <section className="profile-page">
+      <div className="profile-card">
+        <div className="profile-card-inner">
+          <header className="profile-header">
+            <h1 className="profile-title">Profil</h1>
+            <Button className="ui-button">Rediger profil</Button>
+          </header>
+
+          <div className="profile-content">
+            <section className="profile-section">
+              <div className="profile-field">
+                <Label htmlFor="displayName" className="ui-label">
+                  Visningsnavn
+                </Label>
+                <TextInput
+                  id="displayName"
+                  className="ui-input"
+                  /* ...form bindings... */
+                />
+              </div>
+
+              <div className="profile-field">
+                <Label htmlFor="bio" className="ui-label">
+                  Om meg
+                </Label>
+                <TextInput
+                  id="bio"
+                  className="ui-input"
+                  /* ... */
+                />
+              </div>
+            </section>
+
+            <section className="profile-section">
+              {/* Flere felt / paneler */}
+            </section>
+          </div>
+
+          <footer className="profile-footer">
+            <Button color="light" className="ui-button">
+              Avbryt
+            </Button>
+            <Button type="submit" className="ui-button">
+              Lagre endringer
+            </Button>
+          </footer>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+```
+
+## Step 4 – Tailwind usage in TSX (strict rules)
+
+- Allowed:
+  - Simple layout wrappers: flex, grid, gap-*, mt-*, mb-*, pt-*, pb-*, w-full, max-w-*, min-h-screen
+  - Very small, one-off tweaks.
+- Not allowed:
+  - Long Tailwind strings on Flowbite components (Button, TextInput, etc.).
+  - Repeated combinations of 3+ utilities – those must be moved to global.css as named classes.
+
+If you need a class more than once or it’s visually meaningful (“card”, “section”, “field”), define it in global.css and use that semantic name in TSX.

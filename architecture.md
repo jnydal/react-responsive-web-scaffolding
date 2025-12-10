@@ -22,10 +22,22 @@ src/
   hooks/      # Global reusable hooks
   routes/     # Route definitions & composition
   layouts/    # Layout components (MainLayout, AuthLayout, etc.)
-  styles/     # Global Tailwind/CSS
+  styles/     # Global Tailwind/CSS: semantic component classes and shared UI primitives
   assets/     # Static assets (images, icons, fonts)
   utils/      # Small pure helper functions
 ```
+
+### Styles
+
+All global styling lives in `src/styles/`, primarily in `global.css`.
+
+- `global.css` is the **single source of truth** for:
+  - Tailwind setup (`@tailwind base; @tailwind components; @tailwind utilities;`)
+  - Project-wide semantic classes defined in `@layer components` and `@layer utilities`.
+- Components should prefer using these **semantic class names** over long inline Tailwind class strings.
+- Feature-specific but reusable patterns (e.g. `.login-page`, `.profile-page-header`) should also be defined in `global.css` (or a small number of additional global style files) to keep TSX readable.
+
+Only use inline Tailwind utilities in TSX for simple layout and spacing tweaks that are not expected to be reused.
 
 ### Feature Structure
 

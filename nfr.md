@@ -98,6 +98,12 @@ Coverage should focus on:
 - When adding complex flows:
   - Add inline documentation (comments) explaining **why** the flow is structured as it is.
   - Add tests to protect the behaviour.
+- Styling must remain maintainable:
+  - Prefer centralized semantic classes in `global.css` over long, duplicated Tailwind class strings in components.
+  - TSX components should mostly reference named classes (`login-page`, `profile-card`, `ui-button`, etc.) instead of raw Tailwind utilities.
+  - Repeated Tailwind patterns (especially on Flowbite components) must be extracted into `@layer components` with clear, descriptive class names.
+  - Inline Tailwind utilities in TSX are limited to simple layout wrappers and one-off tweaks; anything more complex must be moved to `global.css`.
+- When refactoring, extract repeated Tailwind patterns into `@layer components` with clear, descriptive class names.
 
 ---
 
