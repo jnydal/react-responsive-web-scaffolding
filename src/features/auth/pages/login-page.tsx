@@ -50,14 +50,27 @@ export function LoginPage() {
       }).unwrap();
 
       // Update auth state
-      const typedResult = result as LoginResponse;
-      const user = typedResult.user ?? { id: 'unknown', username: data.identifier };
+      // Since OpenAPI doesn't define exact shape, we extract user flexibly
+      const responseData = result as Record<string, unknown>;
+      const userData = (responseData.user ?? responseData) as Record<string, unknown>;
+      const user = {
+        id: typeof userData.id === 'string' ? userData.id : 'unknown',
+        username: typeof userData.username === 'string' 
+          ? userData.username 
+          : data.identifier,
+        email: typeof userData.email === 'string' ? userData.email : undefined,
+        displayName: typeof userData.displayName === 'string' 
+          ? userData.displayName 
+          : undefined,
+        ...userData,
+      };
       dispatch(setUser(user));
 
       // Redirect to returnTo or default route
       const returnTo = searchParams.get('returnTo') || '/';
       navigate(returnTo, { replace: true });
     } catch (error) {
+      // Error is now normalized to ApiErrorShape { status, code?, message, details? }
       const status =
         error && typeof error === 'object' && 'status' in error
           ? (error as { status?: number }).status ?? 0
@@ -66,7 +79,10 @@ export function LoginPage() {
       const message =
         status === 401
           ? 'E-post/brukernavn eller passord er feil. Vennligst prøv igjen.'
-          : 'Noe gikk galt ved innlogging. Vennligst prøv igjen senere.';
+          : (error && typeof error === 'object' && 'message' in error
+              ? (error as { message?: string }).message
+              : 'Noe gikk galt ved innlogging. Vennligst prøv igjen senere.') || 
+            'Noe gikk galt ved innlogging. Vennligst prøv igjen senere.';
 
       setError('root', {
         type: 'server',
