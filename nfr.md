@@ -109,10 +109,19 @@ Coverage should focus on:
 
 ## API Reliability
 
-- Treat the Sukker API (as per `sukker-api-openapi.json`) as the backend contract.   
-- Handle common error codes gracefully (400, 401, 403, 404, 500).
-- For 401/403:
-  - Trigger auth-related flows (e.g. redirect to login) via the auth slice / AuthContext.
-- For 500 series errors:
-  - Show generic error messages and log details via the logging mechanism.
-
+- Treat the Sukker API (as per `sukker-api-openapi.json`) as the backend contract.
+- All RTK Query API slices must be injected into the shared `baseApi` so they inherit:
+  - Common error handling
+  - Tagging strategy
+  - Retry/backoff policy
+- Error handling rules:
+  - Normalize backend errors into a standard shape: `{ status, code?, message, details? }`.
+  - Handle common status codes consistently:
+    - 400: Map to validation or client errors; show user-friendly messages.
+    - 401/403: Trigger auth-related flows (e.g. redirect to login, clear auth state) via the auth slice / AuthContext.
+    - 404: Show a “not found” state at the feature or route level.
+    - 500+ (server errors): Show a generic error message and log details via the logging mechanism.
+  - Use RTK Query’s retry capabilities only for transient errors (e.g. network failure, 502/503), with a small, bounded retry count.
+- Error boundaries:
+  - Route-level and feature-level error boundaries must be used to prevent a single failing component from breaking the entire app.
+  - Error boundaries must render a clear fallback and should not expose raw exception details to end users.

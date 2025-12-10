@@ -62,6 +62,24 @@ The styling stack is:
    - Create/adjust TypeScript types and Zod schemas as needed.
 4. Treat OpenAPI response schemas as **authoritative** where they exist; otherwise define local types that match the current backend behaviour.
 
+### Base API & Types
+
+- All RTK Query API slices must be created by **injecting into a shared `baseApi`** defined in `src/services/api/base-api.ts`.
+- `baseApi` is responsible for:
+  - Attaching the correct base URL and headers
+  - Normalizing error shapes into a standard `{ status, code?, message, details? }` structure
+  - Handling auth-related status codes (401/403) by delegating to the auth slice / AuthContext
+  - Defining shared `tagTypes` for cache invalidation (e.g. `Auth`, `Profile`, `Messages`, `Search`, `Subscriptions`).
+- Do **not** create standalone `createApi` instances per feature; always inject endpoints into `baseApi`.
+
+### Generated API Types
+
+- All request/response types for Sukker API endpoints are generated from `sukker-api-openapi.json` into `src/generated/sukker-api/`.
+- When working with backend data:
+  - Prefer the generated types as the **source of truth**.
+  - Only add local wrapper types when composing multiple responses or adding view-model fields (e.g. UI-only flags).
+- Do **not** hand-write request/response shapes that duplicate the OpenAPI contract.
+
 ---
 
 ## High-Level Architecture Rules
@@ -168,5 +186,8 @@ When generating or editing code:
   import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
   import type { BaseQueryFn } from '@reduxjs/toolkit/query';
   ```
-  
+9. For any page or route that requires authentication, always use the shared **Protected Route** / auth guard component (e.g. `ProtectedRoute` in `src/routes/`), instead of implementing ad-hoc auth checks in page components.
+10. When adding new route groups, ensure they are covered by an **error boundary** (e.g. `AppErrorBoundary` or feature-level error boundary) so that unexpected errors render a user-friendly fallback instead of breaking the whole app.
+11. All RTK Query API slices must be built by **injecting into the shared `baseApi`**, inheriting its error handling, retry policy and tagging strategy.
+12. Generated API types from `src/generated/sukker-api/` are the authoritative source for backend contracts. Do not “guess” shapes or duplicate them manually unless the user explicitly overrides them in a prompt.
 

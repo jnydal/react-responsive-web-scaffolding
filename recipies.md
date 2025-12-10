@@ -2,6 +2,13 @@
 
 When the user asks for a new page/flow (e.g. “create a login page”, “build a profile settings page”), always follow this pattern:
 
+0. **Decide if the page is protected**
+
+   - If the page/flow requires an authenticated user (e.g. profile, matches, messages, subscriptions, account settings):
+     - Ensure the route is wrapped using the shared auth guard (e.g. `ProtectedRoute`) in `src/routes/`.
+   - Public pages (landing, login, registration, forgot password, marketing content) must *not* use the auth guard.
+   - Do not duplicate auth checks inside the page component; the guard is responsible for redirecting unauthenticated users.
+
 1. **Pick a page key**
 
    - Derive a short key from the feature:

@@ -122,6 +122,19 @@ Rules:
 
 - Never call `fetch`, `axios` or `apiClient` directly in components.
 - All HTTP goes through RTK Query or thunks using `apiClient`.
+### Base API (`baseApi`)
+
+- A shared `baseApi` instance (e.g. `src/services/api/base-api.ts`) is created using `createApi` from RTK Query.
+- All feature-specific API slices **inject endpoints into `baseApi`** instead of calling `createApi` directly.
+- `baseApi` is responsible for:
+  - Configuring `baseQuery` (base URL, credentials, headers)
+  - Normalizing error responses into a standard shape (`{ status, code?, message, details? }`)
+  - Central handling of 401/403 (triggering auth flows / logout)
+  - Defining and exporting `tagTypes` for cache invalidation across the app
+  - Defining a default retry/backoff policy for transient errors (e.g. network issues, 5xx)
+
+This ensures that all future endpoints inherit a consistent error-handling and caching strategy.
+
 
 ### RTK Query
 
@@ -143,9 +156,28 @@ Use thunks only for:
 - Client-side workflows needing Redux integration
 
 ### API Specification Source of Truth
+
 The backend API structure is defined in `sukker-api-openapi.json`.  
 All RTK Query slices, service functions, and TypeScript types must be aligned with this specification.
 
+---
+
+## API Types Generation
+
+- The Sukker backend contract is defined in `sukker-api-openapi.json`.
+- Types for request/response models are generated from this OpenAPI spec into:
+
+
+### src/generated/sukker-api/:
+
+- Rules:
+- Use the generated types as the **canonical** representation of backend data.
+- Do not duplicate these types manually in features; only create wrappers when:
+  - Combining multiple responses, or
+  - Adding purely UI-level fields.
+- Any change to backend shape should be reflected by updating the OpenAPI spec and re-running the type generation script.
+
+This prevents type drift between frontend and backend and keeps the API layer robust over time.
 
 ---
 
@@ -179,6 +211,33 @@ Located in `src/layouts/`:
 - `useParams()` for path params
 - `useSearchParams()` for query params
 - Complex query logic → `urlState.ts` inside feature
+
+---
+
+## Routing Shell & Guards
+
+The router is responsible for:
+
+- Global error handling
+- Auth guarding for protected sections
+- Layout composition
+
+### Error Boundaries
+
+- Wrap the top-level router in an `AppErrorBoundary` component.
+- Feature route groups (e.g. auth, profile, messages) may have their own error boundaries when it improves UX.
+- Error boundaries should:
+  - Show a user-friendly fallback UI
+  - Optionally expose a “Retry” action that re-mounts the subtree
+
+### Protected Routes / Auth Guard
+
+- Authenticated-only sections (e.g. profile, matches, messages, subscription, settings) must use a shared **auth guard** component (e.g. `ProtectedRoute` in `src/routes/`).
+- `ProtectedRoute`:
+  - Reads auth state from Redux / AuthContext
+  - Redirects unauthenticated users to the login/landing page
+  - Optionally preserves the original `location` so the user can be redirected back after login
+- Do not re-implement auth checks inside individual page components; always reuse the shared guard for consistency.
 
 ---
 
