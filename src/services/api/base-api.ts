@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import type { BaseQueryFn } from '@reduxjs/toolkit/query';
 import { apiClient, ApiError } from '../api-client';
 
@@ -8,8 +8,13 @@ interface BaseQueryArgs {
   body?: unknown;
 }
 
+interface SerializedError {
+  status: number;
+  data?: unknown;
+}
+
 // Custom baseQuery using our apiClient
-const baseQuery: BaseQueryFn<BaseQueryArgs, unknown, ApiError> = async (args) => {
+const baseQuery: BaseQueryFn<BaseQueryArgs, unknown, SerializedError> = async (args) => {
   try {
     const { url, method = 'GET', body } = args;
     const result = await apiClient(url, {

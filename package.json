@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "generate:types": "openapi-typescript sukker-api-openapi.json -o src/generated/sukker-api/types.ts",
+    "generate:types": "node scripts/fix-openapi-duplicates.js",
     "build": "npm run generate:types && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
