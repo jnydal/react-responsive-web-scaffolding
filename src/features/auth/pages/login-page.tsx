@@ -2,12 +2,11 @@ import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
-import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
+import { Alert, Button, FloatingLabel, Spinner } from 'flowbite-react';
 import { useLoginMutation } from '../../../services/api/auth-api';
 import { useAppDispatch } from '../../../app/hooks';
 import { setUser } from '../redux/auth-slice';
 import { loginSchema, type LoginFormData } from '../types/login-schema';
-import type { LoginResponse } from '../types/auth.types';
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -114,16 +113,15 @@ export function LoginPage() {
               )}
 
               <div className="login-field">
-                <Label htmlFor="identifier" className="ui-label">
-                  E-post eller brukernavn
-                </Label>
-                <TextInput
+                <FloatingLabel
+                  variant="outlined"
                   id="identifier"
+                  label="E-post eller brukernavn"
                   type="text"
                   autoComplete="username"
                   className="ui-input"
                   {...register('identifier')}
-                  color={errors.identifier ? 'failure' : 'gray'}
+                  color={errors.identifier ? 'error' : undefined}
                   aria-describedby={errors.identifier ? 'identifier-error' : undefined}
                   aria-invalid={!!errors.identifier}
                   required
@@ -136,16 +134,15 @@ export function LoginPage() {
               </div>
 
               <div className="login-field">
-                <Label htmlFor="password" className="ui-label">
-                  Passord
-                </Label>
-                <TextInput
+                <FloatingLabel
+                  variant="outlined"
                   id="password"
+                  label="Passord"
                   type="password"
                   autoComplete="current-password"
                   className="ui-input"
                   {...register('password')}
-                  color={errors.password ? 'failure' : 'gray'}
+                  color={errors.password ? 'error' : undefined}
                   aria-describedby={errors.password ? 'password-error' : undefined}
                   aria-invalid={!!errors.password}
                   required
