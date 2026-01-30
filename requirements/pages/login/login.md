@@ -1,6 +1,4 @@
 # Page Spec -- Login
-
-> **Image reference:** `./login.png`\
 > This document describes the behaviour and UI of the **Login**
 > page.\
 > Cursor: follow this spec together with `agent.md`, `architecture.md`,
