@@ -98,6 +98,15 @@ export function LoginPage() {
           <div className="login-card-inner">
             <h1 className="login-title">Logg inn</h1>
 
+            <div className="login-sso">
+              <Button type="button" className="login-sso-button">
+                Fortsett med Google
+              </Button>
+              <div className="login-divider" role="separator" aria-label="Eller">
+                <span>eller</span>
+              </div>
+            </div>
+
             <form onSubmit={handleSubmit(onSubmit)} noValidate className="login-form">
               {errors.root && (
                 <Alert
