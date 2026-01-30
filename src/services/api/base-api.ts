@@ -5,7 +5,7 @@ import type {
   FetchBaseQueryError,
 } from '@reduxjs/toolkit/query';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://api.sukker.no';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://api.example.com';
 
 // Normalized error shape
 export interface ApiErrorShape {

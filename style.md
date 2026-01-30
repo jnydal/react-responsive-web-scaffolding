@@ -1,5 +1,5 @@
 
-# Style & UI Guidelines – Sukker Frontend
+# Style & UI Guidelines – React Frontend Scaffold
 
 ## Design System
 

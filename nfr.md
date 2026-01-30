@@ -1,4 +1,4 @@
-# Non-Functional Requirements – Sukker Frontend
+# Non-Functional Requirements – React Frontend Scaffold
 
 This document describes performance, security, testing, logging and accessibility requirements that must be respected for all implementations and refactorings.
 
@@ -30,7 +30,7 @@ This document describes performance, security, testing, logging and accessibilit
 
 ### Auth
 
-- Auth tokens are stored in **secure httpOnly cookies**, managed by the backend (Sukker API).
+- Auth tokens are stored in **secure httpOnly cookies**, managed by the backend API.
 - Tokens must never be stored in Redux, Context or localStorage, and must not be exposed to JS.   
 
 ### Data Handling
@@ -109,7 +109,7 @@ Coverage should focus on:
 
 ## API Reliability
 
-- Treat the Sukker API (as per `sukker-api-openapi.json`) as the backend contract.
+- Treat the backend API (as per `api-openapi.json`) as the backend contract.
 - All RTK Query API slices must be injected into the shared `baseApi` so they inherit:
   - Common error handling
   - Tagging strategy

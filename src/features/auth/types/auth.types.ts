@@ -2,7 +2,7 @@
 // Since OpenAPI doesn't define exact response shapes, we use flexible types
 // that extend the generated Record<string, never> with expected fields
 
-import type { paths } from '../../../generated/sukker-api/types';
+import type { paths } from '../../../generated/api/types';
 
 // Use generated response types
 export type LoginResponse = paths['/user/login']['post']['responses']['200']['content']['application/json'];

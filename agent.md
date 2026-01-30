@@ -1,9 +1,9 @@
-# Agent Spec – Sukker Frontend
+# Agent Spec – React Frontend Scaffold
 
 ## Purpose
 
-You are maintaining and extending a new React frontend for **Sukker**, a dating service.  
-The frontend communicates **only** with the backend service **sukker-api** using JSON-based HTTP endpoints defined in `sukker-api-openapi.json`. :contentReference[oaicite:1]{index=1}
+You are maintaining and extending a new React frontend scaffold for a generic product.  
+The frontend communicates **only** with the backend API using JSON-based HTTP endpoints defined in `api-openapi.json`. :contentReference[oaicite:1]{index=1}
 
 Your job is to:
 
@@ -46,8 +46,8 @@ The styling stack is:
 
 ## Backend / API
 
-- Backend is **Sukker API**, described by `sukker-api-openapi.json`.  
-- Base URL (prod): `https://api.sukker.no`. :contentReference[oaicite:3]{index=3}  
+- Backend is the **project API**, described by `api-openapi.json`.  
+- Base URL (prod): `https://api.example.com`. :contentReference[oaicite:3]{index=3}  
 - The OpenAPI spec defines endpoints for domains such as `auth`, `user`, `matchSearch`, `blog`, `forum`, `chat`, `events`, `product`, etc.   
 
 **Rules:**
@@ -57,7 +57,7 @@ The styling stack is:
    - `src/services/api-client.ts`, and
    - RTK Query APIs in `src/services/api/`, or
    - Thunks that also use the shared `apiClient`. :contentReference[oaicite:5]{index=5}  
-3. When you need a new backend interaction, locate the endpoint in `sukker-api-openapi.json` and:
+3. When you need a new backend interaction, locate the endpoint in `api-openapi.json` and:
    - Add/extend an RTK Query slice in `src/services/api/…`
    - Create/adjust TypeScript types and Zod schemas as needed.
 4. Treat OpenAPI response schemas as **authoritative** where they exist; otherwise define local types that match the current backend behaviour.
@@ -74,7 +74,7 @@ The styling stack is:
 
 ### Generated API Types
 
-- All request/response types for Sukker API endpoints are generated from `sukker-api-openapi.json` into `src/generated/sukker-api/`.
+- All request/response types for backend endpoints are generated from `api-openapi.json` into `src/generated/api/`.
 - When working with backend data:
   - Prefer the generated types as the **source of truth**.
   - Only add local wrapper types when composing multiple responses or adding view-model fields (e.g. UI-only flags).
@@ -153,7 +153,7 @@ When you get a new sketch / wireframe / flow, follow this checklist:
 
 
 ## Backend API Specification
-The Sukker backend API is fully defined in the file `sukker-api-openapi.json`.  
+The backend API is fully defined in the file `api-openapi.json`.  
 The agent must always refer to this OpenAPI specification when generating:
 - RTK Query endpoints
 - Request/response TypeScript types
@@ -189,5 +189,5 @@ When generating or editing code:
 9. For any page or route that requires authentication, always use the shared **Protected Route** / auth guard component (e.g. `ProtectedRoute` in `src/routes/`), instead of implementing ad-hoc auth checks in page components.
 10. When adding new route groups, ensure they are covered by an **error boundary** (e.g. `AppErrorBoundary` or feature-level error boundary) so that unexpected errors render a user-friendly fallback instead of breaking the whole app.
 11. All RTK Query API slices must be built by **injecting into the shared `baseApi`**, inheriting its error handling, retry policy and tagging strategy.
-12. Generated API types from `src/generated/sukker-api/` are the authoritative source for backend contracts. Do not “guess” shapes or duplicate them manually unless the user explicitly overrides them in a prompt.
+12. Generated API types from `src/generated/api/` are the authoritative source for backend contracts. Do not “guess” shapes or duplicate them manually unless the user explicitly overrides them in a prompt.
 

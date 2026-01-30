@@ -17,8 +17,8 @@ import { execSync } from 'child_process';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const OPENAPI_FILE = join(__dirname, '..', 'sukker-api-openapi.json');
-const TYPES_FILE = join(__dirname, '..', 'src', 'generated', 'sukker-api', 'types.ts');
+const OPENAPI_FILE = join(__dirname, '..', 'api-openapi.json');
+const TYPES_FILE = join(__dirname, '..', 'src', 'generated', 'api', 'types.ts');
 
 try {
   const spec = JSON.parse(readFileSync(OPENAPI_FILE, 'utf-8'));
@@ -57,7 +57,7 @@ try {
   
   if (fixedCount > 0) {
     // Write the fixed spec to a temporary file (don't modify original)
-    const fixedFile = join(tmpdir(), `sukker-api-openapi-fixed-${Date.now()}.json`);
+    const fixedFile = join(tmpdir(), `api-openapi-fixed-${Date.now()}.json`);
     writeFileSync(fixedFile, JSON.stringify(spec, null, 2), 'utf-8');
     
     console.log(`✅ Fixed ${fixedCount} duplicate operationId(s) in OpenAPI spec:`);

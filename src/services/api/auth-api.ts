@@ -1,4 +1,4 @@
-import type { paths, components } from '../../generated/sukker-api/types';
+import type { paths } from '../../generated/api/types';
 import { baseApi } from './base-api';
 
 // Use generated types from OpenAPI spec

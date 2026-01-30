@@ -1,7 +1,7 @@
 # Page Spec -- Login
 
 > **Image reference:** `./login.png`\
-> This document describes the behaviour and UI of the Sukker **Login**
+> This document describes the behaviour and UI of the **Login**
 > page.\
 > Cursor: follow this spec together with `agent.md`, `architecture.md`,
 > `style.md` and `nfr.md`.
@@ -10,7 +10,7 @@
 
 ## 1. Purpose
 
-The Login page lets an existing Sukker user authenticate with their
+The Login page lets an existing user authenticate with their
 **email/username + password** and gain access to the authenticated area
 of the app.
 

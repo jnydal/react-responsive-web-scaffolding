@@ -1,7 +1,7 @@
-# Architecture – Sukker Frontend
+# Architecture – React Frontend Scaffold
 
 ## Overview
-The Sukker frontend is a **single-page application** built with React 18 (hooks only) and a **feature-based architecture**. It communicates exclusively with the **Sukker API** as defined in `sukker-api-openapi.json`.
+This frontend scaffold is a **single-page application** built with React 18 (hooks only) and a **feature-based architecture**. It communicates exclusively with the **backend API** as defined in `api-openapi.json`.
 
 Server state and side effects are centralized via **Redux Toolkit** and **RTK Query**, with a single shared HTTP client.
 
@@ -157,18 +157,18 @@ Use thunks only for:
 
 ### API Specification Source of Truth
 
-The backend API structure is defined in `sukker-api-openapi.json`.  
+The backend API structure is defined in `api-openapi.json`.  
 All RTK Query slices, service functions, and TypeScript types must be aligned with this specification.
 
 ---
 
 ## API Types Generation
 
-- The Sukker backend contract is defined in `sukker-api-openapi.json`.
+- The backend contract is defined in `api-openapi.json`.
 - Types for request/response models are generated from this OpenAPI spec into:
 
 
-### src/generated/sukker-api/:
+### src/generated/api/:
 
 - Rules:
 - Use the generated types as the **canonical** representation of backend data.
